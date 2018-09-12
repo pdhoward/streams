@@ -81,6 +81,7 @@ const ioEvents = (io) => {
             console.log('chat message received from socket')
             console.log(message)
             io.emit('chat message', 'happening')
+            pub.publish('chat', message);            
         })
         socket.on('disconnect', () => {
             console.log('disconnnect from socket')
@@ -93,6 +94,7 @@ function onError(err) {
     console.log(err);
 }
 
+// This is an expreimental function that shows the use of prototypes and scope (this)
 function tryit() {
     "use strict";
 
