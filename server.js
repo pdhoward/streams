@@ -85,7 +85,7 @@ const ioEvents = (io) => {
         })
         socket.on('disconnect', () => {
             console.log('disconnnect from socket')
-        })
+        })        
 
     })
 }
@@ -172,7 +172,7 @@ obj.test.push("hi")
 console.log("-----------------------test----------------")
 console.log(obj2)
 
-redis.subscribe('news', 'music', function (err, count) {
+redis.subscribe('news', 'music', 'watch', function (err, count) {
     // Now we are subscribed to both the 'news' and 'music' channels.
     // `count` represents the number of channels we are currently subscribed to.
 
@@ -184,6 +184,7 @@ redis.on('message', function (channel, message) {
     // Receive message Hello world! from channel news
     // Receive message Hello again! from channel music
     console.log('Receive message %s from channel %s', message, channel);
+    io.emit('chat message', message)
 });
 /*
 setInterval(function(){
