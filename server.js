@@ -94,7 +94,7 @@ function onError(err) {
     console.log(err);
 }
 
-// This is an expreimental function that shows the use of prototypes and scope (this)
+// This is an experimental function that shows the use of prototypes and scope (this)
 function tryit() {
     "use strict";
 
