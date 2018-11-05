@@ -5,10 +5,16 @@
 ///////            version 0.5.0            ///////
 //////////////////////////////////////////////////
 require('dotenv').config()
-var express =   require('express');
-var http =      require('http');
-var path =      require('path');
-const Redis =   require('ioredis')
+const express =             require('express');
+const http =                require('http');
+const path =                require('path');
+const Redis =               require('ioredis')
+
+const app = express();
+const server = new http.Server(app);
+const io = require('socket.io')(server);
+const port = 3000;
+const htmlFile = path.resolve(__dirname, './index.html');
 
 let redisport = process.env.REDISPORT;
 let redishost = process.env.REDISHOST;
@@ -25,43 +31,7 @@ var pub = new Redis({
     host: redishost,
     password: redispassword
 })
-/*
-// ===============================
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
 
-// Force Socket.io to ONLY use "websockets"; No Long Polling.
-io.set('transports', ['websocket']);
-
-// using redislabs 
-// subscribe and listen and emit
-redis.subscribe('newMessage', function (err, count) {
-    console.log("Subscribed to " + count + " channel")
-});
-
-  redis.on('message', function (channel, message) {
-       console.log('Received  ' + channel + ' message: ' + message);
-     });
-
-
-// Allow sockets to access session data
-io.use((socket, next) => {
-    require('../session')(socket.request, {}, next);
-});
-
-// Define all Events
-ioEvents(io);
-
-// The server object will be then used to listen to a port number
-return server;
-
-// =======================================================
-*/
-var app = express();
-var server = new http.Server(app);
-var io = require('socket.io')(server);
-var port = 3000;
-var htmlFile = path.resolve(__dirname, './index.html');
 
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);

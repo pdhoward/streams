@@ -2,31 +2,27 @@
 
 const uuidv1 = require('uuid/v1')
 
+// 10 digit identifier for Machine platform
+// platform handles all incoming messages
+const platform = "+19148195104"
+
+const user = null;
+
 exports.obj = {
-  MessageSid: uuidv1(),
-  SmsSid:uuidv1(),
-  AccountSid: uuidv1(),
-  MessagingServiceSid: uuidv1(),
+  MessageId: uuidv1(),   
   From: user,
   To: platform,
-  Body: "",
-  NumMedia: "",
-  NumSegments: "",
-  MediaContentType: " ",
-  MediaUrl: " ",
+  Body: "",  
   FromCity:"Charlotte",
   FromState: "NC",
   FromZip: "28222",
-  FromCounty: "USA",
-  SmsStatus: "",
+  FromCounty: "USA",  
   ToCity: "Charlotte",
   ToState: "NC",
   ToZip: "28222",
-  ToCountry: "USA",
-  AddOns: " ",
+  ToCountry: "USA",  
   ApiVersion: "v1",
-  PostDate: Date.now(),
-  ChaoticSid: uuidv1(),
+  PostDate: Date.now(),  
   ChaoticSource: "web",
   Token: undefined
 }
