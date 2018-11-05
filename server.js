@@ -9,12 +9,16 @@ const express =             require('express');
 const http =                require('http');
 const path =                require('path');
 const Redis =               require('ioredis')
+const IPGeo =               require('ip-geolocation-api-javascript-sdk');
+const IPGeoArgs =           require('ip-geolocation-api-javascript-sdk/GeolocationParams.js');
 
 const app = express();
 const server = new http.Server(app);
 const io = require('socket.io')(server);
 const port = 3000;
 const htmlFile = path.resolve(__dirname, './index.html');
+
+const ipgeo = new IPGeo(process.env.IP_SECRET);
 
 let redisport = process.env.REDISPORT;
 let redishost = process.env.REDISHOST;
@@ -32,6 +36,25 @@ var pub = new Redis({
     password: redispassword
 })
 
+
+///////////////////GEO LOCATION LOOKUP ////////////////////////
+
+
+// Query geolocation for the calling machine's IP address for all fields
+console.log(ipgeolocationApi.getGeolocation());
+
+// Query geolocation for IP address (1.1.1.1) and all fields
+var geolocationParams = new GeolocationParams();
+geolocationParams.setIp("1.1.1.1");
+
+console.log(ipgeolocationApi.getGeolocation(geolocationParams));
+
+// Query geolocation for IP address (1.1.1.1) and fields (geo, time_zone and currency)
+var geolocationParams = new GeolocationParams();
+geolocationParams.setIp("1.1.1.1");
+geolocationParams.setFields("geo,time_zone,currency");
+
+console.log(ipgeolocationApi.getGeolocation(geolocationParams));
 
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
