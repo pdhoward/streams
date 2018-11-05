@@ -46,13 +46,13 @@ console.log(ipgeo.getGeolocation());
 
 // Query geolocation for IP address (1.1.1.1) and all fields
 var ipgeoargs = new GeolocationParams();
-ipgeoargs.setIp("1.1.1.1");
+ipgeoargs.setIP("172.72.49.66");
 
 console.log(ipgeo.getGeolocation(ipgeoargs));
 
 // Query geolocation for IP address (1.1.1.1) and fields (geo, time_zone and currency)
-var ipgeoargs = new IPGeoArgs();
-ipgeoargs.setIp("1.1.1.1");
+var ipgeoargs = new GeolocationParams();
+ipgeoargs.setIP("172.72.49.66");
 ipgeoargs.setFields("geo,time_zone,currency");
 
 console.log(ipgeo.getGeolocation(ipgeoargs));
