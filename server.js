@@ -38,7 +38,7 @@ var pub = new Redis({
 
 
 ///////////////////GEO LOCATION LOOKUP ////////////////////////
-
+//https://ipgeolocation.io/documentation/ip-geolocation-api-javascript-sdk-201809051421
 
 // Query geolocation for the calling machine's IP address for all fields
 console.log("---------------geo location data ------------------")
