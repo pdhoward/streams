@@ -10,6 +10,8 @@ const http =                require('http');
 const path =                require('path');
 const Redis =               require('ioredis')
 const reqIP =               require('request-ip')
+const ipRegex =             reuiqre('ip-regex')
+const obj =                 require('./data/obj')
 
 const app = express();
 const server = new http.Server(app);
@@ -33,10 +35,6 @@ var pub = new Redis({
     password: redispassword
 })
 
-
-///////////////////GEO LOCATION LOOKUP ////////////////////////
-// gist for using net https://gist.github.com/tedmiston/5935757
-
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
 
@@ -46,24 +44,21 @@ const ioEvents = (io) => {
     io.on('connection', (socket) => {
 
         console.log('io socket connection')
-
-        socket.on('newMessage', (message) => {
-            console.log('new message received from socket')
-            console.log(message)
-        })
+        
         socket.on('chat message', (message) => {
             console.log('chat message received from socket')
             console.log(message)
-            io.emit('chat message', 'happening')
+            io.emit('chat message', 'Got your message')
+            obj.user = "hold"
             pub.publish('chat', message);            
         })
         socket.on('disconnect', () => {
             console.log('disconnnect from socket')
         })
 
-        console.log('-----SOCKET ADDRESS--------')
-        var ip = socket.handshake.headers;
-        console.log(ip)
+        //console.log('-----SOCKET ADDRESS--------')
+        //var ip = socket.handshake.headers;
+        //console.log(ip)
 
     })
 }
@@ -71,84 +66,6 @@ const ioEvents = (io) => {
 function onError(err) {
     console.log(err);
 }
-
-// This is an experimental function that shows the use of prototypes and scope (this)
-function tryit() {
-    "use strict";
-
-    function Product(id, name, price, quantity) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-    }
-
-    Product.prototype = {
-        add : function (count) {
-            this.quantity += count === 0 || count ? count : 1;
-        },
-
-        remove : function (count) {
-            this.quantity -= count === 0 || count ? count : 1;
-        },
-
-        setPrice : function (value) {
-            this.price = value;
-        },
-
-        toString : function () {
-            return this.name;
-        }
-    };
-
-    function Inventory() {
-        this.items = Array.prototype.slice.call(arguments);
-    }
-
-    Inventory.prototype = {
-        add : function (item) {
-            this.items.push(item);
-        },
-
-        remove : function (item) {
-            var index = this.items.indexOf(item);
-
-            if (index > -1) {
-                this.items.splice(index, 1);
-            }
-        },
-
-        getTotalPrice : function () {
-            var sum = this.items.reduce(function (previousValue, currentValue, index, array) {
-				console.log('prev ' + previousValue)
-				console.log('cur ' + currentValue)
-				console.log('index ' + index)
-				console.log('array ' + array)
-                return previousValue + currentValue.price * currentValue.quantity;
-            }, 0);
-
-            return sum;
-        }
-    };
-
-    var peaches = new Product(0, "peaches", 5, 5000),
-        carrots = new Product(1, "carrots", 2, 10000),
-        bananas = new Product(2, "bananas", 6, 3000),
-        inventory = new Inventory(peaches, carrots, bananas);
-
-    return inventory.getTotalPrice();
-	
-	
-};
-let obj = {}
-let obj2 = {
-		message: "hi",
-		test: []
-		}
-obj = JSON.parse(JSON.stringify(obj2))
-obj.test.push("hi")
-console.log("-----------------------test----------------")
-console.log(obj2)
 
 redis.subscribe('news', 'music', 'watch', function (err, count) {
     // Now we are subscribed to both the 'news' and 'music' channels.
@@ -164,21 +81,19 @@ redis.on('message', function (channel, message) {
     console.log('Receive message %s from channel %s', message, channel);
     io.emit('chat message', message)
 });
-/*
-setInterval(function(){
-  io.emit('time', new Date);
-  console.log("emitting date " + new Date)
-	}, 25000);
-*/
+
 app.get('/', function(req, res) {
         //console.log(tryit());
         console.log("IP ADDRESSES ---- ")
-        console.log(req.connection.remoteAddress)
-        console.log('-------------')
-        console.log(req.header('x-forwarded-for'))
+        console.log(req.connection.remoteAddress)      
         const clientIp = reqIP.getClientIp(req);
         console.log('-------------')
-        console.log(reqIP)
+        console.log(clientIp)        
+        console.log("IPV4 Mapped Addr")
+        console.log(ipRegex().test(clientIp))
+        let extractIP = clientIp.match(ipRegex())
+        console.log(extractIP)
+        
 		res.sendFile(htmlFile)
         });
         
