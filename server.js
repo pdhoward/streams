@@ -34,7 +34,7 @@ var pub = new Redis({
 
 
 ///////////////////GEO LOCATION LOOKUP ////////////////////////
-
+// gist for using net https://gist.github.com/tedmiston/5935757
 
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
@@ -61,7 +61,8 @@ const ioEvents = (io) => {
         })
 
         console.log('-----SOCKET ADDRESS--------')
-        console.log(socket.address())
+        var ip = socket.handshake.headers;
+        console.log(ip)
 
     })
 }
