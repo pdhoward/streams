@@ -58,7 +58,10 @@ const ioEvents = (io) => {
         })
         socket.on('disconnect', () => {
             console.log('disconnnect from socket')
-        })        
+        })
+
+        console.log('-----SOCKET ADDRESS--------')
+        console.log(socket.address())
 
     })
 }
@@ -170,7 +173,7 @@ app.get('/', function(req, res) {
         console.log("IP ADDRESSES ---- ")
         console.log(req.connection.remoteAddress)
         console.log('-------------')
-        console.log(req.headers['x-forwarded-for'])
+        console.log(req.headers['x-forwarded-for'])        
 		res.sendFile(htmlFile)
         });
         
