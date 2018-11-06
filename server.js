@@ -9,6 +9,7 @@ const express =             require('express');
 const http =                require('http');
 const path =                require('path');
 const Redis =               require('ioredis')
+const reqIP =               require('request-ip')
 
 const app = express();
 const server = new http.Server(app);
@@ -174,7 +175,10 @@ app.get('/', function(req, res) {
         console.log("IP ADDRESSES ---- ")
         console.log(req.connection.remoteAddress)
         console.log('-------------')
-        console.log(req.headers['x-forwarded-for'])        
+        console.log(req.header('x-forwarded-for'))
+        const clientIp = reqIP.getClientIp(req);
+        console.log('-------------')
+        console.log(reqIP)
 		res.sendFile(htmlFile)
         });
         
