@@ -16,8 +16,6 @@ const io = require('socket.io')(server);
 const port = 3000;
 const htmlFile = path.resolve(__dirname, './index.html');
 
-const ipgeo = new IPGeo(process.env.IP_SECRET);
-
 let redisport = process.env.REDISPORT;
 let redishost = process.env.REDISHOST;
 let redispassword = process.env.REDISPASSWORD;
