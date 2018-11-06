@@ -9,8 +9,6 @@ const express =             require('express');
 const http =                require('http');
 const path =                require('path');
 const Redis =               require('ioredis')
-const IPGeo =               require('ip-geolocation-api-javascript-sdk');
-const GeolocationParams  =  require('ip-geolocation-api-javascript-sdk/GeolocationParams.js');
 
 const app = express();
 const server = new http.Server(app);
@@ -38,24 +36,7 @@ var pub = new Redis({
 
 
 ///////////////////GEO LOCATION LOOKUP ////////////////////////
-//https://ipgeolocation.io/documentation/ip-geolocation-api-javascript-sdk-201809051421
 
-// Query geolocation for the calling machine's IP address for all fields
-console.log("---------------geo location data ------------------")
-console.log(ipgeo.getGeolocation());
-
-// Query geolocation for IP address (1.1.1.1) and all fields
-var ipgeoargs = new GeolocationParams();
-ipgeoargs.setIP("172.72.49.66");
-
-console.log(ipgeo.getGeolocation(ipgeoargs));
-
-// Query geolocation for IP address (1.1.1.1) and fields (geo, time_zone and currency)
-var ipgeoargs = new GeolocationParams();
-ipgeoargs.setIP("172.72.49.66");
-ipgeoargs.setFields("geo,time_zone,currency");
-
-console.log(ipgeo.getGeolocation(ipgeoargs));
 
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
@@ -187,7 +168,11 @@ setInterval(function(){
 	}, 25000);
 */
 app.get('/', function(req, res) {
-		//console.log(tryit());
+        //console.log(tryit());
+        console.log("IP ADDRESSES ---- ")
+        console.log(req.connection.remoteAddress)
+        console.log('-------------')
+        console.log(req.headers['x-forwarded-for'])
 		res.sendFile(htmlFile)
         });
         
