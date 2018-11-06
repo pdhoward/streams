@@ -10,7 +10,7 @@ const http =                require('http');
 const path =                require('path');
 const Redis =               require('ioredis')
 const reqIP =               require('request-ip')
-const ipRegex =             reuiqre('ip-regex')
+const ipRegex =             require('ip-regex')
 const obj =                 require('./data/obj')
 
 const app = express();
@@ -35,6 +35,8 @@ var pub = new Redis({
     password: redispassword
 })
 
+let extractIP
+
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
 
@@ -49,8 +51,9 @@ const ioEvents = (io) => {
             console.log('chat message received from socket')
             console.log(message)
             io.emit('chat message', 'Got your message')
-            obj.user = "hold"
-            pub.publish('chat', message);            
+            obj.From = extractIP
+            obj.Body = message
+            pub.publish('chat', JSON.stringify(obj));            
         })
         socket.on('disconnect', () => {
             console.log('disconnnect from socket')
@@ -91,9 +94,9 @@ app.get('/', function(req, res) {
         console.log(clientIp)        
         console.log("IPV4 Mapped Addr")
         console.log(ipRegex().test(clientIp))
-        let extractIP = clientIp.match(ipRegex())
+        extractIP = clientIp.match(ipRegex())
         console.log(extractIP)
-        
+
 		res.sendFile(htmlFile)
         });
         
