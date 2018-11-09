@@ -70,8 +70,8 @@ function onError(err) {
     console.log(err);
 }
 
-redis.subscribe('news', 'music', 'watch', function (err, count) {
-    // Now we are subscribed to both the 'news' and 'music' channels.
+redis.subscribe('watch', function (err, count) {
+    // Now we are subscribed to watch channel -- listening for machine messages.
     // `count` represents the number of channels we are currently subscribed to.
     let msg = {}
     msg.From = '+17042221234'
@@ -80,14 +80,28 @@ redis.subscribe('news', 'music', 'watch', function (err, count) {
 
     pub.publish('news', JSON.stringify(msg))
     msg.Body = 'Life is very good!'
-    pub.publish('music', JSON.stringify(msg))
+    pub.publish('news', JSON.stringify(msg))
 });
 
-redis.on('message', function (channel, message) {
-    // Receive message Hello world! from channel news
-    // Receive message Hello again! from channel music
-    console.log('Receive message %s from channel %s', message, channel);
-    io.emit('chat message', message)
+redis.on('message', function (channel, message) {    
+    
+     msgObj = JSON.parse(msg)
+     message = msgObj.Body
+     console.log(`Received ${ message } from ${ channel }`);
+
+      switch (channel) {
+        case 'Bookstore':
+        case 'Voting Booth':
+        case 'Bank':
+        case 'GeoFence':
+          io.emit('chat message', `The context is ${msgObj.Channel}`)
+          io.emit('chat message', message)
+          break;       
+        default:
+          console.log(r(`No context detected`))          
+
+      }
+
 });
 
 app.get('/', function(req, res) {
@@ -104,7 +118,7 @@ app.get('/', function(req, res) {
 
 		res.sendFile(htmlFile)
         });
-        
+
 ioEvents(io)
 
 server.listen(port);    
