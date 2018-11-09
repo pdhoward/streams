@@ -3,20 +3,22 @@
         window.onload = function () {
                socket = io('http://localhost:3000');
                socket.on('chat message', function (msg) {
-               msgObj = JSON.parse(msg)
-               msgObj.toggle = "left"
-               if (msg.Obj == "MACHINE") msgOBJ.toggle = "right"
-               let time = 0
-               insertChat(msgObj, time);
+                    msgObj = JSON.parse(msg)
+                    msgObj.toggle = "left"
+                    let time = 0
+                    if (msgObj.name == "MACHINE"){
+                        msgObj.toggle = "right"
+                        time=1500
+                    }
+                    if (msgObj.isResponse) {
+                        let pct = (msgObj.score * 100).toFixed(1) + "%"
+                        msgObj.Body = `It am ${pct} confident that you want to ${msgObj.action}`
+                        time = 2000
+                    }
+                    
+                    insertChat(msgObj, time);
               })
-            };        
-
-        // define avatars
-        var me = {};
-            me.avatar = "https://lh6.googleusercontent.com/-lr2nyjhhjXw/AAAAAAAAAAI/AAAAAAAARmE/MdtfUmC0M4s/photo.jpg?sz=48";
-
-        var you = {};
-            you.avatar = "https://a11.t26.net/taringa/avatares/9/1/2/F/7/8/Demon_King1/48x48_5C5.jpg";
+            };          
 
         function formatAMPM(date) {
             var hours = date.getHours();

@@ -19,6 +19,8 @@ const io = require('socket.io')(server);
 const port = 3000;
 const htmlFile = path.resolve(__dirname, './index.html');
 
+app.use(express.static(path.resolve('public')));
+
 let redisport = process.env.REDISPORT;
 let redishost = process.env.REDISHOST;
 let redispassword = process.env.REDISPASSWORD;
@@ -39,8 +41,6 @@ let extractIP
 
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
-
-app.use(express.static(path.resolve(__dirname, 'public')));
 
 const ioEvents = (io) => {
     io.on('connection', (socket) => {
