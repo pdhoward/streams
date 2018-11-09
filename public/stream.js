@@ -4,6 +4,7 @@
                socket = io('http://localhost:3000');
                socket.on('chat message', function (msg) {
                     msgObj = JSON.parse(msg)
+                    console.log(msgObj)
                     msgObj.toggle = "left"
                     let time = 0
                     if (msgObj.name == "MACHINE"){
@@ -12,7 +13,7 @@
                     }
                     if (msgObj.isResponse) {
                         let pct = (msgObj.score * 100).toFixed(1) + "%"
-                        msgObj.Body = `It am ${pct} confident that you want to ${msgObj.action}`
+                        msgObj.Body = `I am ${pct} confident that you want to ${msgObj.action}`
                         time = 2000
                     }
                     
