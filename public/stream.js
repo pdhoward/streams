@@ -6,7 +6,8 @@
                msgObj = JSON.parse(msg)
                msgObj.toggle = "left"
                if (msg.Obj == "MACHINE") msgOBJ.toggle = "right"
-               insertChat(msgOBJ);
+               let time = 0
+               insertChat(msgObj, time);
               })
             };        
 
@@ -29,7 +30,7 @@
         }
 
         //--handle chat messages
-        function insertChat(obj) {
+        function insertChat(obj, time) {
            
             var control = "";
             var date = formatAMPM(new Date());
@@ -39,7 +40,8 @@
                     '<div class="msj macro">' +
                     '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + obj.image + '" /></div>' +
                     '<div class="text text-l">' +
-                    '<p>' + obj.Message + '</p>' +
+                    '<p><small> Context is ' + obj.Channel + '</small></p>' +
+                    '<p>' + obj.Body + '</p>' +
                     '<p><small>' + date + '</small></p>' +
                     '</div>' +
                     '</div>' +
@@ -48,16 +50,18 @@
                 control = '<li style="width:100%;">' +
                     '<div class="msj-rta macro">' +
                     '<div class="text text-r">' +
-                    '<p>' + obj.Message + '</p>' +
+                    '<p>' + obj.Body + '</p>' +
                     '<p><small>' + date + '</small></p>' +
                     '</div>' +
                     '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="' + obj.image + '" /></div>' +
                     '</li>';
             }
+            
             setTimeout(
                 function () {
                     $("ul").append(control).scrollTop($("ul").prop('scrollHeight'));
                 }, time);
+            
 
         }
 
