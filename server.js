@@ -73,9 +73,14 @@ function onError(err) {
 redis.subscribe('news', 'music', 'watch', function (err, count) {
     // Now we are subscribed to both the 'news' and 'music' channels.
     // `count` represents the number of channels we are currently subscribed to.
+    let msg = {}
+    msg.From = '+17042221234'
+    msg.Channel = "GeoFence"
+    msg.Body = 'Hello World!'
 
-    pub.publish('news', 'Hello world!');
-    pub.publish('music', 'Hello again!');
+    pub.publish('news', JSON.stringify(msg))
+    msg.Body = 'Life is very good!'
+    pub.publish('music', JSON.stringify(msg))
 });
 
 redis.on('message', function (channel, message) {
