@@ -83,22 +83,21 @@ redis.subscribe('watch', function (err, count) {
     pub.publish('news', JSON.stringify(msg))
 });
 
-redis.on('message', function (channel, message) {    
+redis.on('message', function (channel, msg) {
     
      msgObj = JSON.parse(msg)
      message = msgObj.Body
-     console.log(`Received ${ message } from ${ channel }`);
+     console.log(`Received ${ message } from ${ channel }`);    
 
-      switch (channel) {
+      switch (msgObj.Channel) {
         case 'Bookstore':
         case 'Voting Booth':
         case 'Bank':
-        case 'GeoFence':
-          io.emit('chat message', `The context is ${msgObj.Channel}`)
-          io.emit('chat message', message)
-          break;       
+        case 'GeoFence':          
+          io.emit('chat message', msg)
+          break;
         default:
-          console.log(r(`No context detected`))          
+          console.log(`No context detected`)          
 
       }
 

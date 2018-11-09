@@ -3,10 +3,12 @@
         window.onload = function () {
                socket = io('http://localhost:3000');
                socket.on('chat message', function (msg) {
-                insertChat('you', msg);
-                })
-            };
-        
+               msgObj = JSON.parse(msg)
+               msgObj.toggle = "left"
+               if (msg.Obj == "MACHINE") msgOBJ.toggle = "right"
+               insertChat(msgOBJ);
+              })
+            };        
 
         // define avatars
         var me = {};
@@ -27,19 +29,17 @@
         }
 
         //--handle chat messages
-        function insertChat(who, text, time) {
-            if (time === undefined) {
-                time = 0;
-            }
+        function insertChat(obj) {
+           
             var control = "";
             var date = formatAMPM(new Date());
 
-            if (who == "me") {
+            if (obj.toggle == 'left') {
                 control = '<li style="width:100%">' +
                     '<div class="msj macro">' +
-                    '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + me.avatar + '" /></div>' +
+                    '<div class="avatar"><img class="img-circle" style="width:100%;" src="' + obj.image + '" /></div>' +
                     '<div class="text text-l">' +
-                    '<p>' + text + '</p>' +
+                    '<p>' + obj.Message + '</p>' +
                     '<p><small>' + date + '</small></p>' +
                     '</div>' +
                     '</div>' +
@@ -48,10 +48,10 @@
                 control = '<li style="width:100%;">' +
                     '<div class="msj-rta macro">' +
                     '<div class="text text-r">' +
-                    '<p>' + text + '</p>' +
+                    '<p>' + obj.Message + '</p>' +
                     '<p><small>' + date + '</small></p>' +
                     '</div>' +
-                    '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="' + you.avatar + '" /></div>' +
+                    '<div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="' + obj.image + '" /></div>' +
                     '</li>';
             }
             setTimeout(
