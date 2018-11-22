@@ -76,11 +76,11 @@ redis.subscribe('watch', function (err, count) {
     let msg = {}
     msg.From = '+17042221234'
     msg.Channel = "GeoFence"
-    msg.Body = 'Hello World!'
+    msg.Body = 'Stream Server Connected'
 
-    pub.publish('news', JSON.stringify(msg))
-    msg.Body = 'Life is very good!'
-    pub.publish('news', JSON.stringify(msg))
+    pub.publish('monitor', JSON.stringify(msg))
+    msg.Body = `Displays all Messages on Port ${port}`
+    pub.publish('monitor', JSON.stringify(msg))
 });
 
 redis.on('message', function (channel, msg) {
