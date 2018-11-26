@@ -75,7 +75,7 @@ redis.subscribe('watch', function (err, count) {
     // `count` represents the number of channels we are currently subscribed to.
     let msg = {}
     msg.From = '+17042221234'
-    msg.Channel = "GeoFence"
+    msg.Context = "GeoFence"
     msg.Body = 'Stream Server Connected'
 
     pub.publish('monitor', JSON.stringify(msg))
@@ -89,7 +89,7 @@ redis.on('message', function (channel, msg) {
      message = msgObj.Body
      console.log(`Received ${ message } from ${ channel }`);    
 
-      switch (msgObj.Channel) {
+      switch (msgObj.Context) {
         case 'Bookstore':
         case 'Voting Booth':
         case 'Bank':
