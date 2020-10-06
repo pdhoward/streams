@@ -1,10 +1,12 @@
-# Streams
-Platform for testing messaging platforms
+### Streams
+Platform for testing the edge network and IOT devices
 
-Stream messages and mock chatting
+Stream messages to a REDIS DB
+
+Proxy for small device aggregator
 
 
-## Getting Started
+#### Getting Started
 
 1. Clone this repository.
 2. npm install
@@ -12,5 +14,5 @@ Stream messages and mock chatting
 4. node server
 
 
-## LICENSE
+#### LICENSE
 MIT
