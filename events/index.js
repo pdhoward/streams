@@ -11,7 +11,7 @@ const events = (app) => {
   let server = require('http').Server(app);
   dbevents()
   redisevents()
-  return {server, io}
+  return {server}
 }
 
 module.exports = {
