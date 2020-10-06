@@ -1,5 +1,5 @@
 {
-  "name": "testserver",
+  "name": "stream",
   "version": "0.7.0",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "socket.io-emitter": "1.0.0",
     "uuid": "^3.3.2"
   },
-  "author": "Patrick Howard",
+  "author": "Strategic Machines",
   "license": "MIT",
   "homepage": "http://www.xio.com"
 }
