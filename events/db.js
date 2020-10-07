@@ -15,4 +15,5 @@ exports.dbevents = async () => {
     });
 
     console.log(g(`DB events registered`))
+    return {db}
 }

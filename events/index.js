@@ -8,10 +8,13 @@ const { g, b, gr, r, y } =      require('../console');
 //////////////////////////////////////////////////////////////
 
 const events = (app) => {
-  let server = require('http').Server(app);
-  dbevents()
-  redisevents()
-  return {server}
+  return new Promise((resolve, reject) => {
+    let server = require('http').Server(app);
+    let db = dbevents()
+    let pub = redisevents()
+    resolve({server, db, pub}) 
+  })
+  
 }
 
 module.exports = {

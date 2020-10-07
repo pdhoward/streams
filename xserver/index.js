@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const express =               require('express');
 const path =                  require('path');
+const {getservers} =          require('../controller')
 const { g, b, gr, r, y } =    require('../console');
 
 // Express app
@@ -27,12 +28,21 @@ log(`Stream is currently running in ${isDev ? `development` : `production`}`);
 ////////////  Event Registration for server, streams and db      ////////
 ////////////////////////////////////////////////////////////////////////
 
-const servers = require('../events').events(app)
+const servers = getservers(app)
 const server = servers['server']
-const io = servers['io']
- 
-let testmsg = 'Tests Started'
-require('../test')(testmsg)
+// const pub = servers['pub']
+
+// let testmsg = 'Tests Started'
+// require('../test')(testmsg)
+
+// let msg = {}
+// msg.From = '+17042221234'
+// msg.Context = "GeoFence"
+// msg.Body = 'Stream Server Connected'
+
+// pub.publish('monitor', JSON.stringify(msg))
+// msg.Body = `Displays all Messages on Port ${port}`
+// pub.publish('monitor', JSON.stringify(msg))
 
 // start server
 const port = process.env.RUN_PORT || 4000
