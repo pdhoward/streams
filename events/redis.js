@@ -36,7 +36,7 @@ const sub = new Redis(options)
 
 exports.redisevents = () => {
     try {
-        sub.subscribe('monitor', function (err, count) {
+        sub.subscribe('watch', function (err, count) {
             console.log(`Currently tracking ${count} channels`)
         });
 
@@ -44,7 +44,7 @@ exports.redisevents = () => {
             console.log('Redis error: ' + err);
         });      
         console.log(g(`Redis events registered`))
-        return {pub}
+        return {pub, sub}
     }
     catch(error) {
         console.log(r('Error Connecting to Redis Labs'))

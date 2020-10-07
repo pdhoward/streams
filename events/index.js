@@ -11,8 +11,8 @@ const events = (app) => {
   return new Promise((resolve, reject) => {
     let server = require('http').Server(app);
     let db = dbevents()
-    let pub = redisevents()
-    resolve({server, db, pub}) 
+    let {pub, sub} = redisevents()
+    resolve({server, db, pub, sub}) 
   })
   
 }
