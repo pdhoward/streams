@@ -60,7 +60,7 @@ const startBroadcasts = async() => {
     switch (msgObj.Context) {     
       case 'GeoFence':          
         console.log(`Channel: ${ channel } Message: ${msg}`);
-        db.collection('signals').insertOne(msgObj)
+        //db.collection('signals').insertOne(msgObj)
         break;
       default:
         console.log(`------No context detected-----`)    
@@ -74,7 +74,7 @@ const startBroadcasts = async() => {
     msg.Timestamp = Date.now()
     msg.Body = `Discounts today only`
     pub.publish('device', JSON.stringify(msg))
-  }, 1000)
+  }, 2000)
   
 }
 
