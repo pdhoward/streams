@@ -7,6 +7,7 @@ require('dotenv').config();
 ///////////////////////////////////////////////////////////
 
 const express =               require('express');
+const util =                  require('util')
 const path =                  require('path');
 const {events} =              require('../events')
 const {publish} =             require('../events/redis')
@@ -41,13 +42,19 @@ const startBroadcasts = async() => {
   
   const server = servers['server']
   const pub = servers['pub']  
-  const sub = servers['sub']
+  const redis = servers['redis']
   const db = servers['db']
   // start server
   const port = process.env.RUN_PORT || 4000
 
+  // supports promise as well as other commands
+  redis.monitor().then(function (monitor) {
+      monitor.on('monitor', function (time, args, source, database) {
+        console.log(time + ": " + util.inspect(args));
+      });
+    });
   
-  sub.on('message', function (channel, msg) {
+  redis.on('message', function (channel, msg) {
       
     msgObj = JSON.parse(msg)
     message = msgObj.Body
@@ -69,13 +76,13 @@ const startBroadcasts = async() => {
   let msg = {}
   msg.From = '+17042221234'
   msg.Context = "GeoFence"
-  msg.Body = 'Stream Server Connected'
+ 
+  msg.Body = `Displays all Messages on Port ${port}` 
+  pub.publish('watch', JSON.stringify(msg))
 
-  pub.publish('device', JSON.stringify(msg))
-  msg.Body = `Displays all Messages on Port ${port}`
-  pub.publish('monitor', JSON.stringify(msg))
-  pub.publish('message', JSON.stringify(msg))
-  publish('device', JSON.stringify(msg))
+  msg.Body = `----Is this really working----` 
+  pub.publish('watch', JSON.stringify(msg))
+ 
 
   server.listen(port, () => {
     console.log(`listening on port ${port}`) 

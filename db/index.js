@@ -3,8 +3,9 @@
 ////////   mongoDB connection manager         ///////
 ////////////////////////////////////////////////////
 
-const MongoClient =       require('mongodb').MongoClient;
-const Cache =             require('lru-cache')
+const MongoClient =             require('mongodb').MongoClient;
+const Cache =                   require('lru-cache')
+const { g, b, gr, r, y } =      require('../console');
 
 const dbOptions = {
   	poolSize: 10, // Maintain up to x socket connections        
@@ -25,11 +26,11 @@ const cache = new Cache(cacheOptions)
 
 const log = console
 
-module.exports = (url, dbName) => {
+module.exports = (url) => {
 
   return new Promise(async (resolve, reject) => {
         
-      const api = url;  // dbname not needed for Atlas connect
+      const api = url;  // dbname is embedded in Atlas url
       let conn;
 
       // retrieve db server connection
@@ -37,23 +38,25 @@ module.exports = (url, dbName) => {
 
       // if connection is in cache, will reuse it, otherwise create it
       if (typeof conn === 'undefined' || typeof conn === null) {
-        log.info('creating new connection for ' + api);
-        const conn = new MongoClient(api, dbOptions);
-
-        conn.connect(async(err) => {
-          if (err) reject(err)
-          log.info('MongoDB server connection live')
-          await cache.set(api, conn) 
-          // create db connection and return
-          let db = conn.db(dbName)
-          resolve(db)                   
-        });        
+          log.info('creating new connection for ' + api);
+          const conn = new MongoClient(api, dbOptions);
+          conn.once('open', () => {      
+            log.info(g(`db connection is a success`))
+            });
+          conn.connect(async(err) => {
+            if (err) reject(err)
+            log.info('MongoDB server connection live')
+            await cache.set(api, conn) 
+            // create db connection and return 
+            let db = conn.db()          
+            resolve(db)                   
+            });        
       }
       else {
-        log.info('Reusing existing MongoDB connection')
-        // create db connection and return
-        let db = conn.db(dbName)
-        resolve(db)         
+          log.info('Reusing existing MongoDB connection')
+          // create db connection and return
+          let db = conn.db()
+          resolve(db)         
       }
  })
 }

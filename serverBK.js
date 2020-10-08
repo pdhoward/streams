@@ -8,14 +8,15 @@ require('dotenv').config()
 const express =             require('express');
 const http =                require('http');
 const path =                require('path');
+const util =                require('util')
 const Redis =               require('ioredis')
-const reqIP =               require('request-ip')
-const ipRegex =             require('ip-regex')
-const obj =                 require('./data/obj')
+//const reqIP =               require('request-ip')
+//const ipRegex =             require('ip-regex')
+////const obj =                 require('./data/obj')
 
 const app = express();
 const server = new http.Server(app);
-const io = require('socket.io')(server);
+//const io = require('socket.io')(server);
 const port = 3000;
 const htmlFile = path.resolve(__dirname, './index.html');
 
@@ -41,31 +42,7 @@ let extractIP
 
 // Force Socket.io to ONLY use "websockets"; No Long Polling.
 //io.set('transports', ['websocket']);
-
-const ioEvents = (io) => {
-    io.on('connection', (socket) => {
-
-        console.log('io socket connection')
-        
-        socket.on('chat message', (message) => {
-            console.log('chat message received from socket')
-            console.log(message)
-            io.emit('chat message', 'Got your message')
-            obj.From = extractIP
-            obj.Body = message
-            pub.publish('chat', JSON.stringify(obj));            
-        })
-        socket.on('disconnect', () => {
-            console.log('disconnnect from socket')
-        })
-
-        //console.log('-----SOCKET ADDRESS--------')
-        //var ip = socket.handshake.headers;
-        //console.log(ip)
-
-    })
-}
-
+//
 function onError(err) {
     console.log(err);
 }
@@ -73,6 +50,7 @@ function onError(err) {
 redis.subscribe('watch', function (err, count) {
     // Now we are subscribed to watch channel -- listening for machine messages.
     // `count` represents the number of channels we are currently subscribed to.
+    console.log(`----subscribed to watch -----`)
     let msg = {}
     msg.From = '+17042221234'
     msg.Context = "GeoFence"
@@ -80,8 +58,16 @@ redis.subscribe('watch', function (err, count) {
 
     pub.publish('monitor', JSON.stringify(msg))
     msg.Body = `Displays all Messages on Port ${port}`
-    pub.publish('monitor', JSON.stringify(msg))
+    pub.publish('watch', JSON.stringify(msg))
 });
+
+  
+//   // supports promise as well as other commands
+// redis.monitor().then(function (monitor) {
+//     monitor.on('monitor', function (time, args, source, database) {
+//       console.log(time + ": " + util.inspect(args));
+//     });
+//   });
 
 redis.on('message', function (channel, msg) {
     
@@ -94,7 +80,7 @@ redis.on('message', function (channel, msg) {
         case 'Voting Booth':
         case 'Bank':
         case 'GeoFence':          
-          io.emit('chat message', msg)
+          console.log(`message is ${msg}`)
           break;
         default:
           console.log(`No context detected`)          
@@ -118,7 +104,7 @@ app.get('/', function(req, res) {
 		res.sendFile(htmlFile)
         });
 
-ioEvents(io)
+//ioEvents(io)
 
 server.listen(port);    
 

@@ -28,27 +28,28 @@ let options = {
     }
 
 const pub = new Redis(options)
-const sub = new Redis(options)
+const redis = new Redis(options)
 
 /////////////////////////////////////////////////////
 /////////////////////redis events //////////////////
 ////////////////////////////////////////////////////    
 
 exports.redisevents = () => {
-    try {
-        sub.subscribe('watch', function (err, count) {
-            console.log(`Currently tracking ${count} channels`)
-        });
+    return new Promise((resolve, reject)=> {
+        try {
+            redis.subscribe('watch', function (err, count) {
+                console.log(`Currently tracking ${count} channels`)
+            });
 
-        sub.on('error', function (err) {
-            console.log('Redis error: ' + err);
-        });      
-        console.log(g(`Redis events registered`))
-        return {pub, sub}
-    }
-    catch(error) {
-        console.log(r('Error Connecting to Redis Labs'))
-    }
+            redis.on('error', function (err) {
+                console.log('Redis error: ' + err);
+            });      
+            console.log(g(`Redis events registered`))
+            resolve({pub, redis})
+        } catch(error) {
+            reject(error)
+        }
+    })   
 }
 
 // publishing channel
