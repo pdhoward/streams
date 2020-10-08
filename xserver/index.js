@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const express =               require('express');
 const util =                  require('util')
+const { v4: uuidv4 } =        require('uuid');
 const {events} =              require('../events')
 const { g, b, gr, r, y } =    require('../console');
 
@@ -33,11 +34,8 @@ const createServers = () => {
   return new Promise(async (resolve, reject) => {
     const servers = await events(app)
     resolve(servers)
-  })  
+  }) 
   
-}
-const startServers = async() => {
-  const servers = await createServers()
 }
 
 const startBroadcasts = async() => {
@@ -46,7 +44,6 @@ const startBroadcasts = async() => {
   const redis = servers['redis']
   const db = servers['db']
   
-
   // supports promise as well as other commands
   redis.monitor().then(function (monitor) {
       monitor.on('monitor', function (time, args, source, database) {
@@ -56,47 +53,30 @@ const startBroadcasts = async() => {
   redis.subscribe('device', function (err, count) {
       console.log(`Currently tracking ${count} channels`)
   });
-  redis.on('message', function (channel, msg) {
-      
-    msgObj = JSON.parse(msg)
-    message = msgObj.Body
-    console.log(`Received ${ message } from ${ channel }`);    
 
-    switch (msgObj.Context) {
-      case 'Bookstore':
-      case 'Device':
-      case 'Bank':
+  redis.on('message', function (channel, msg) {        
+    let msgObj = JSON.parse(msg)
+    switch (msgObj.Context) {     
       case 'GeoFence':          
-        console.log(`------------This finally fired----------------`)
+        console.log(`Channel: ${ channel } Message: ${msg}`);
+        db.collection('signals').insert(msgObj)
         break;
       default:
-        console.log(`------No context detected-----`)          
-
+        console.log(`------No context detected-----`)    
     }
-
   });
-  let msg = {}
-  msg.From = '+17042221234'
-  msg.Context = "GeoFence"
- 
-  msg.Body = `Displays all Messages on Port ${PORT}` 
-  pub.publish('watch', JSON.stringify(msg))
 
-  msg.Body = `----Is this really working----` 
-  pub.publish('watch', JSON.stringify(msg))
- 
-  msg.Body = `--- BLUETOOTH DEVICE JUST ADVERTISED ---` 
-  pub.publish('device', JSON.stringify(msg))
-
+  setInterval(() => {
+    let msg = {}
+    msg.UUID = uuidv4()
+    msg.Context = "GeoFence" 
+    msg.Timestamp = Date.now()
+    msg.Body = `Discounts today only`
+    pub.publish('device', JSON.stringify(msg))
+  }, 1000)
   
 }
 
-const setTimeoutPromise = util.promisify(setTimeout);
-
-setTimeoutPromise(40, 'foobar').then((value) => {
-  // value === 'foobar' (passing values is optional)
-  // This is executed after about 40 milliseconds.
-});
 startBroadcasts()
 // let testmsg = 'Tests Started'
 // require('../test')(testmsg)

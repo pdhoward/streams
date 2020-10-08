@@ -12,7 +12,7 @@
     "ioredis": "^4.17.3",
     "lru-cache": "^6.0.0",
     "mongodb": "^3.6.2",
-    "uuid": "^3.4.0"
+    "uuid": "^8.3.1"
   },
   "author": "Strategic Machines",
   "license": "MIT",
