@@ -9,6 +9,7 @@ require('dotenv').config();
 const express =               require('express');
 const path =                  require('path');
 const {events} =              require('../events')
+const {publish} =             require('../events/redis')
 const { g, b, gr, r, y } =    require('../console');
 
 // Express app
@@ -45,10 +46,6 @@ const startBroadcasts = async() => {
   // start server
   const port = process.env.RUN_PORT || 4000
 
-  server.listen(port, () => {
-      console.log(`listening on port ${port}`) 
-    })
-
   
   sub.on('message', function (channel, msg) {
       
@@ -58,13 +55,13 @@ const startBroadcasts = async() => {
 
     switch (msgObj.Context) {
       case 'Bookstore':
-      case 'Voting Booth':
+      case 'Device':
       case 'Bank':
       case 'GeoFence':          
-        console.log(`This finally fired`)
+        console.log(`------------This finally fired----------------`)
         break;
       default:
-        console.log(`No context detected`)          
+        console.log(`------No context detected-----`)          
 
     }
 
@@ -78,11 +75,20 @@ const startBroadcasts = async() => {
   msg.Body = `Displays all Messages on Port ${port}`
   pub.publish('monitor', JSON.stringify(msg))
   pub.publish('message', JSON.stringify(msg))
+  publish('device', JSON.stringify(msg))
+
+  server.listen(port, () => {
+    console.log(`listening on port ${port}`) 
+  })
 }
 
 startBroadcasts()
 // let testmsg = 'Tests Started'
 // require('../test')(testmsg)
+
+
+
+
 
 
 
