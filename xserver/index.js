@@ -50,6 +50,7 @@ const startBroadcasts = async() => {
         console.log(time + ": " + util.inspect(args));
       });
     });
+
   redis.subscribe('device', function (err, count) {
       console.log(`Currently tracking ${count} channels`)
   });
@@ -59,7 +60,7 @@ const startBroadcasts = async() => {
     switch (msgObj.Context) {     
       case 'GeoFence':          
         console.log(`Channel: ${ channel } Message: ${msg}`);
-        db.collection('signals').insert(msgObj)
+        db.collection('signals').insertOne(msgObj)
         break;
       default:
         console.log(`------No context detected-----`)    
