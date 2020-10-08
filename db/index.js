@@ -41,11 +41,10 @@ module.exports = (url) => {
           log.info('creating new connection for ' + api);
           const conn = new MongoClient(api, dbOptions);
           conn.once('open', () => {      
-            log.info(g(`db connection is a success`))
+            log.info(g(`MongoDB server connection live`))
             });
           conn.connect(async(err) => {
-            if (err) reject(err)
-            log.info('MongoDB server connection live')
+            if (err) reject(err)           
             await cache.set(api, conn) 
             // create db connection and return 
             let db = conn.db()          
